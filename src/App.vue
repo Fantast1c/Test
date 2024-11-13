@@ -1,5 +1,10 @@
-<script setup></script>
+<script setup>
+import RegistrationView from '@/views/RegistrationView.vue';
+import TheMain from './components/TheMain/TheMain.vue';
+</script>
 
 <template>
-  <main></main>
+  <TheMain>
+    <RegistrationView />
+  </TheMain>
 </template>
