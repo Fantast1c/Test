@@ -12,7 +12,6 @@
     background-color 0.2s ease;
   cursor: pointer;
 
-  &:focus-within,
   &:focus-visible {
     outline: none;
     border: 1px solid #ed4d29;
@@ -56,6 +55,7 @@
 
   &__content-wrapper {
     position: absolute;
+    z-index: 10;
     top: calc(100% + 5px);
     left: 0;
     display: block;

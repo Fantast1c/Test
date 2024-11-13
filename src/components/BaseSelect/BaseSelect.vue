@@ -9,11 +9,17 @@ const props = defineProps({
     default: null,
   },
 
+  /**
+   * Список опций.
+   */
   options: {
     type: Array,
     default: () => [],
   },
 
+  /**
+   * Добавляет placeholder для селекта.
+   */
   placeholder: {
     type: String,
     default: '',
