@@ -1,13 +1,16 @@
 <script setup>
 import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
 import BaseField from '@/components/BaseField/BaseField.vue';
 import BaseForm from '@/components/BaseForm/BaseForm.vue';
 import BaseSelect from '@/components/BaseSelect/BaseSelect.vue';
 
-const PLACEHOLDER_NAME = 'Имя';
-const PLACEHOLDER_COMPANY_NAME = 'Имя компании';
-const ACCOUNT_CORPORATIVE_ID = 'corporative';
+import {
+  PLACEHOLDER_NAME,
+  PLACEHOLDER_COMPANY_NAME,
+  ACCOUNT_CORPORATIVE_ID
+} from '@/constants/registration.js'
 
 const accountOptions = [
   { id: 'personal', name: 'Личный' },
@@ -20,13 +23,16 @@ const rateOptions = [
   { id: 'vip', name: 'Вип (30$)', price: 30 },
 ];
 
+const store = useStore();
+const information = computed(() => store.getters.information);
+
 const accountType = ref('personal');
 const name = ref('');
 const email = ref('');
 const rate = ref('');
 const userCount = ref('');
 
-const rateOptionsSelected = computed(
+const rateOptionSelected = computed(
   () => rateOptions.find((item) => item.id === rate.value),
 );
 
@@ -52,23 +58,24 @@ function clearFields() {
 }
 
 function onSubmit() {
-  const personalData = `
-    Имя: ${name.value},
-    Email: ${email.value}
-  `;
+  const commomData = {
+    accountType: accountType.value,
+    name: name.value,
+    email: email.value,
+  }
 
-  const corporativeData = `
-    Имя компании: ${name.value},
-    Email: ${email.value},
-    Тариф: ${rateOptionsSelected.value?.name},
-    Стоимость: ${userCount.value * rateOptionsSelected.value?.price}$
-  `;
+  const corporativeData = {
+    ...commomData,
+    rate: rateOptionSelected.value,
+    userCount: userCount.value,
+  }
 
-  isCorporativeType.value
-    ? console.log(corporativeData)
-    : console.log(personalData);
+  const data = isCorporativeType.value ? corporativeData : commomData;
+  store.dispatch('setFields', data);
 
   clearFields();
+
+  console.log(information.value);
 }
 </script>
 
@@ -106,4 +113,4 @@ function onSubmit() {
       Sign up
     </BaseButton>
   </BaseForm>
-</template>
+</template>@/constants/registration.js
