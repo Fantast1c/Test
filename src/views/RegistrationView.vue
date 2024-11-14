@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, shallowRef } from 'vue';
+import { computed, ref } from 'vue';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
 import BaseField from '@/components/BaseField/BaseField.vue';
 import BaseForm from '@/components/BaseForm/BaseForm.vue';
