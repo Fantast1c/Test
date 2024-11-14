@@ -24,7 +24,6 @@ const rateOptions = [
 ];
 
 const store = useStore();
-const information = computed(() => store.getters.information);
 
 const accountType = ref('personal');
 const name = ref('');
@@ -75,7 +74,7 @@ function onSubmit() {
 
   clearFields();
 
-  console.log(information.value);
+  console.log(store.getters.information);
 }
 </script>
 
@@ -113,4 +112,4 @@ function onSubmit() {
       Sign up
     </BaseButton>
   </BaseForm>
-</template>@/constants/registration.js
+</template>
