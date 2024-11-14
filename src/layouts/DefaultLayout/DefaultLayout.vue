@@ -6,4 +6,4 @@
   </main>
 </template>
 
-<style src="./TheMain.scss"></style>
+<style src="./DefaultLayout.scss"></style>

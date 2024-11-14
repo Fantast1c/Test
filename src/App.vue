@@ -1,10 +1,10 @@
 <script setup>
 import RegistrationView from '@/views/RegistrationView.vue';
-import TheMain from './components/TheMain/TheMain.vue';
+import DefaultLayout from './layouts/DefaultLayout/DefaultLayout.vue';
 </script>
 
 <template>
-  <TheMain>
+  <DefaultLayout>
     <RegistrationView />
-  </TheMain>
+  </DefaultLayout>
 </template>
