@@ -1,5 +1,6 @@
 <script setup>
-import { computed, ref, shallowRef } from 'vue';
+import { computed, shallowRef } from 'vue';
+import { useStore } from 'vuex';
 import BaseButton from '@/components/BaseButton/BaseButton.vue';
 import BaseField from '@/components/BaseField/BaseField.vue';
 import BaseForm from '@/components/BaseForm/BaseForm.vue';
@@ -9,11 +10,12 @@ const PLACEHOLDER_NAME = 'Имя';
 const PLACEHOLDER_COMPANY_NAME = 'Имя компании';
 const ACCOUNT_CORPORATIVE_ID = 'corporative';
 
-const accountType = ref('personal');
-const name = ref('');
-const email = ref('');
-const rate = ref('');
-const userCount = ref('');
+const store = useStore();
+
+const fields = computed(() => store.getters.getFields);
+const updateFields = (key, value) => {
+  store.dispatch('updateFields', { key, value });
+};
 
 const accountOptions = shallowRef([
   { id: 'personal', name: 'Личный' },
@@ -27,15 +29,15 @@ const rateOptions = shallowRef([
 ]);
 
 const rateName = computed(
-  () => rateOptions.value.find((item) => item.id === rate.value)?.name,
+  () => rateOptions.value.find((item) => item.id === fields.value.rate)?.name,
 );
 
 const ratePrice = computed(
-  () => rateOptions.value.find((item) => item.id === rate.value)?.price,
+  () => rateOptions.value.find((item) => item.id === fields.value.rate)?.price,
 );
 
 const isCorporativeType = computed(
-  () => accountType.value === ACCOUNT_CORPORATIVE_ID,
+  () => fields.value.accountType === ACCOUNT_CORPORATIVE_ID,
 );
 
 const dynamicNamePlaceholder = computed(() => {
@@ -44,35 +46,28 @@ const dynamicNamePlaceholder = computed(() => {
 
 const isDisabledButton = computed(
   () =>
-    !(accountType.value && name.value && email.value) ||
-    (isCorporativeType.value && !(rate.value && userCount.value)),
+    !(fields.value.accountType && fields.value.name && fields.value.email) ||
+    (isCorporativeType.value && !(fields.value.rate && fields.value.userCount)),
 );
-
-function clearFields() {
-  name.value = '';
-  email.value = '';
-  rate.value = '';
-  userCount.value = '';
-}
 
 function onSubmit() {
   const personalData = `
-    Имя: ${name.value},
-    Email: ${email.value}
+    Имя: ${fields.value.name},
+    Email: ${fields.value.email}
   `;
 
   const corporativeData = `
-    Имя компании: ${name.value},
-    Email: ${email.value},
+    Имя компании: ${fields.value.name},
+    Email: ${fields.value.email},
     Тариф: ${rateName.value},
-    Стоимость: ${userCount.value * ratePrice.value}$
+    Стоимость: ${fields.value.userCount * ratePrice.value}$
   `;
 
   isCorporativeType.value
     ? console.log(corporativeData)
     : console.log(personalData);
 
-  clearFields();
+  // clearFields();
 }
 </script>
 
@@ -80,28 +75,33 @@ function onSubmit() {
   <BaseForm @submit.prevent="onSubmit">
     <template #title>Sign up</template>
     <BaseSelect
-      v-model="accountType"
+      v-model="fields.accountType"
       :options="accountOptions"
       placeholder="Выберите тип аккаунта"
+      @select="updateFields('accountType', fields.accountType)"
     />
     <BaseField
-      v-model="name"
+      v-model="fields.name"
       :placeholder="dynamicNamePlaceholder"
+      @input="updateFields('name', fields.name)"
     />
     <BaseField
-      v-model="email"
+      v-model="fields.email"
       placeholder="email"
+      @input="updateFields('email', fields.email)"
     />
     <BaseSelect
       v-show="isCorporativeType"
-      v-model="rate"
+      v-model="fields.rate"
       :options="rateOptions"
       placeholder="Выберите тариф"
+      @select="updateFields('rate', fields.rate)"
     />
     <BaseField
       v-show="isCorporativeType"
-      v-model="userCount"
+      v-model="fields.userCount"
       placeholder="Количество пользователей"
+      @input="updateFields('userCount', fields.userCount)"
     />
     <BaseButton
       type="submit"
