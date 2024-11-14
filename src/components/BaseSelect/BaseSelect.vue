@@ -1,14 +1,13 @@
 <script setup>
-import { ref, toRef, computed } from 'vue';
+import { ref, computed } from 'vue';
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue';
 
-const props = defineProps({
-  /** @value */
-  modelValue: {
-    type: [String, Number, Object, Array],
-    default: null,
-  },
+const model = defineModel({
+  type: String,
+  default: '',
+});
 
+const props = defineProps({
   /**
    * Список опций.
    */
@@ -28,7 +27,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:model-value']);
 
-const model = toRef(props, 'modelValue');
 const isActive = ref(false);
 
 const option = computed(
@@ -92,7 +90,7 @@ function close() {
           class="select__option"
           @click="select(item)"
         >
-          {{ item.name }}
+          <span>{{ item.name }}</span>
           <SvgIcon
             v-show="isCheckedOption(item.id)"
             name="check"
