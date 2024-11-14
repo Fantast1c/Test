@@ -9,29 +9,25 @@ const PLACEHOLDER_NAME = 'Имя';
 const PLACEHOLDER_COMPANY_NAME = 'Имя компании';
 const ACCOUNT_CORPORATIVE_ID = 'corporative';
 
+const accountOptions = [
+  { id: 'personal', name: 'Личный' },
+  { id: 'corporative', name: 'Корпоративный' },
+];
+
+const rateOptions = [
+  { id: 'base', name: 'Базовый (5$)', price: 5 },
+  { id: 'extended', name: 'Расширенный (15$)', price: 15 },
+  { id: 'vip', name: 'Вип (30$)', price: 30 },
+];
+
 const accountType = ref('personal');
 const name = ref('');
 const email = ref('');
 const rate = ref('');
 const userCount = ref('');
 
-const accountOptions = shallowRef([
-  { id: 'personal', name: 'Личный' },
-  { id: 'corporative', name: 'Корпоративный' },
-]);
-
-const rateOptions = shallowRef([
-  { id: 'base', name: 'Базовый (5$)', price: 5 },
-  { id: 'extended', name: 'Расширенный (15$)', price: 15 },
-  { id: 'vip', name: 'Вип (30$)', price: 30 },
-]);
-
-const rateName = computed(
-  () => rateOptions.value.find((item) => item.id === rate.value)?.name,
-);
-
-const ratePrice = computed(
-  () => rateOptions.value.find((item) => item.id === rate.value)?.price,
+const rateOptionsSelected = computed(
+  () => rateOptions.find((item) => item.id === rate.value),
 );
 
 const isCorporativeType = computed(
@@ -64,8 +60,8 @@ function onSubmit() {
   const corporativeData = `
     Имя компании: ${name.value},
     Email: ${email.value},
-    Тариф: ${rateName.value},
-    Стоимость: ${userCount.value * ratePrice.value}$
+    Тариф: ${rateOptionsSelected.value?.name},
+    Стоимость: ${userCount.value * rateOptionsSelected.value?.price}$
   `;
 
   isCorporativeType.value
